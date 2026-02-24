@@ -114,3 +114,62 @@ python script.py
 ```
 
 You'll see the files from your host machine are accessible in the container!
+
+## Using uv - Modern Python Package Manager
+Instead of pip install globally, we want to use a **virtual environment** - an isolated Python environment that keeps dependencies for this project separate from other projects and from your system Python within your container.
+
+Use `uv` - a modern, fast Python package and project manager written in Rust. It's much faster than pip and handles virtual environments automatically.
+
+```bash
+pip install uv
+```
+
+Now initialize a Python project with uv:
+
+```bash
+uv init --python 3.13
+```
+
+This creates a `pyproject.toml` file for managing dependencies and a `.python-version` file.
+
+### Comparing Python Versions
+
+```bash
+uv run which python  # Python in the virtual environment, which is 3.13 in this case
+uv run python -V
+
+which python        # System Python
+python -V
+```
+You'll see they're different - `uv run` uses the isolated environment.
+
+### Adding Dependencies
+
+Now let's add pandas:
+
+```bash
+uv add pandas pyarrow
+```
+
+This adds pandas to your `pyproject.toml` and installs it in the virtual environment.
+
+### Running the Pipeline
+
+Now we can execute the file with input param '10':
+
+```bash
+uv run python pipeline.py 10
+```
+
+We will see:
+
+* `['pipeline.py', '10']`
+* `job finished successfully for day = 10`
+
+## Git Configuration
+
+This script produces a binary (parquet) file, so let's make sure we don't accidentally commit it to git by adding parquet extensions to `.gitignore`:
+
+```
+*.parquet
+```
