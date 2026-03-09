@@ -1,12 +1,17 @@
 #=============Use an official Python runtime as a parent image==========
-
+# base Docker image that we will build on
 # FROM python:3.13.11-slim
 
+# set up our image by installing prerequisites; pandas in this case
 # RUN pip install pandas pyarrow
 
+# set up the working directory inside the container
 # WORKDIR /app
+
+# copy the script to the container. 1st name is source file, 2nd is destination
 # COPY pipeline.py pipeline.py
 
+# set the default command to execute when the container starts
 # ENTRYPOINT ["python", "pipeline.py"]
 
 #===================Build docker with UV================================
@@ -29,7 +34,9 @@ COPY "pyproject.toml" "uv.lock" ".python-version" ./
 RUN uv sync --locked
 
 # Copy application code
-COPY pipeline.py pipeline.py
+#COPY pipeline.py pipeline.py
+COPY Ingest_data.py .
 
 # Set entry point
-ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
+#ENTRYPOINT ["uv", "run", "python", "pipeline.py"]
+ENTRYPOINT ["uv", "run", "python", "Ingest_data.py"]
